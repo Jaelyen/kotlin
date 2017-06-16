@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.resolve.scopes
 
+import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.incremental.components.LookupLocation
@@ -33,6 +34,8 @@ interface SyntheticScope {
     fun getSyntheticMemberFunctions(receiverTypes: Collection<KotlinType>): Collection<FunctionDescriptor>
     fun getSyntheticStaticFunctions(scope: ResolutionScope): Collection<FunctionDescriptor>
     fun getSyntheticConstructors(scope: ResolutionScope): Collection<FunctionDescriptor>
+
+    fun getSyntheticConstructor(constructor: ConstructorDescriptor): ConstructorDescriptor?
 }
 
 interface SyntheticScopes {
@@ -67,3 +70,6 @@ fun SyntheticScopes.collectSyntheticStaticFunctions(scope: ResolutionScope)
 
 fun SyntheticScopes.collectSyntheticConstructors(scope: ResolutionScope)
         = scopes.flatMap { it.getSyntheticConstructors(scope) }
+
+fun SyntheticScopes.collectSyntheticConstructors(constructor: ConstructorDescriptor)
+        = scopes.mapNotNull { it.getSyntheticConstructor(constructor) }

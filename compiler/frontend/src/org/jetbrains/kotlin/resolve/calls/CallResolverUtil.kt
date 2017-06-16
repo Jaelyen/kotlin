@@ -35,6 +35,8 @@ import org.jetbrains.kotlin.resolve.calls.model.ArgumentMatch
 import org.jetbrains.kotlin.resolve.calls.tasks.ExplicitReceiverKind
 import org.jetbrains.kotlin.resolve.calls.tasks.ResolutionCandidate
 import org.jetbrains.kotlin.resolve.scopes.LexicalScope
+import org.jetbrains.kotlin.resolve.scopes.SyntheticScopes
+import org.jetbrains.kotlin.resolve.scopes.collectSyntheticConstructors
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
 import org.jetbrains.kotlin.resolve.scopes.receivers.ReceiverValue
 import org.jetbrains.kotlin.resolve.scopes.utils.getImplicitReceiversHierarchy
@@ -192,7 +194,8 @@ fun createResolutionCandidatesForConstructors(
         lexicalScope: LexicalScope,
         call: Call,
         typeWithConstructors: KotlinType,
-        useKnownTypeSubstitutor: Boolean
+        useKnownTypeSubstitutor: Boolean,
+        syntheticScopes: SyntheticScopes
 ): List<ResolutionCandidate<ConstructorDescriptor>> {
     val classWithConstructors = typeWithConstructors.constructor.declarationDescriptor as ClassDescriptor
 
@@ -233,7 +236,7 @@ fun createResolutionCandidatesForConstructors(
         dispatchReceiver = null
     }
 
-    val syntheticConstructors = constructors.mapNotNull { it.createSamAdapterConstructor() }
+    val syntheticConstructors = constructors.flatMap { syntheticScopes.collectSyntheticConstructors(it) }
 
     return (constructors + syntheticConstructors).map {
         ResolutionCandidate.create(call, it, dispatchReceiver, receiverKind, knownSubstitutor)
