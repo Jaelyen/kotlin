@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.load.java.components.JavaResolverCache
 import org.jetbrains.kotlin.load.java.components.TypeUsage
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassDescriptor
-import org.jetbrains.kotlin.load.java.descriptors.SamAdapterDescriptor
 import org.jetbrains.kotlin.load.java.lazy.LazyJavaResolverContext
 import org.jetbrains.kotlin.load.java.lazy.child
 import org.jetbrains.kotlin.load.java.lazy.replaceComponents
@@ -163,7 +162,7 @@ class LazyJavaClassDescriptor(
 
     override fun toString() = "Lazy Java class ${this.fqNameUnsafe}"
 
-    fun createSamAdapterConstructor(constructor: JavaClassConstructorDescriptor): SamAdapterDescriptor<JavaClassConstructorDescriptor>? {
+    fun createSamAdapterConstructor(constructor: JavaClassConstructorDescriptor): ConstructorDescriptor? {
         return c.components.samConversionResolver.createSamAdapterConstructor(constructor)
     }
 

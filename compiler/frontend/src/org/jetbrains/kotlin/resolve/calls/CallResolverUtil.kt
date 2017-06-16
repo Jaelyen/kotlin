@@ -193,7 +193,7 @@ fun createResolutionCandidatesForConstructors(
         call: Call,
         typeWithConstructors: KotlinType,
         useKnownTypeSubstitutor: Boolean
-): List<ResolutionCandidate<FunctionDescriptor>> {
+): List<ResolutionCandidate<ConstructorDescriptor>> {
     val classWithConstructors = typeWithConstructors.constructor.declarationDescriptor as ClassDescriptor
 
     val unwrappedType = typeWithConstructors.unwrap()

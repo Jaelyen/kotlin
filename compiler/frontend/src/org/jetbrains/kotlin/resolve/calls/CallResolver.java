@@ -279,13 +279,13 @@ public class CallResolver {
                     NewResolutionOldInference.ResolutionKind.Function.INSTANCE);
         }
         else if (calleeExpression instanceof KtConstructorCalleeExpression) {
-            return resolveCallForConstructor(context, (KtConstructorCalleeExpression) calleeExpression);
+            return (OverloadResolutionResults) resolveCallForConstructor(context, (KtConstructorCalleeExpression) calleeExpression);
         }
         else if (calleeExpression instanceof KtConstructorDelegationReferenceExpression) {
             KtConstructorDelegationCall delegationCall = (KtConstructorDelegationCall) context.call.getCallElement();
             DeclarationDescriptor container = context.scope.getOwnerDescriptor();
             assert container instanceof ClassConstructorDescriptor : "Trying to resolve JetConstructorDelegationCall not in constructor. scope.ownerDescriptor = " + container;
-            return resolveConstructorDelegationCall(context, delegationCall, (KtConstructorDelegationReferenceExpression) calleeExpression,
+            return (OverloadResolutionResults) resolveConstructorDelegationCall(context, delegationCall, (KtConstructorDelegationReferenceExpression) calleeExpression,
                                                     (ClassConstructorDescriptor) container);
         }
         else if (calleeExpression == null) {
@@ -314,7 +314,7 @@ public class CallResolver {
         return resolveCallForInvoke(context.replaceCall(call), tracingForInvoke);
     }
 
-    private OverloadResolutionResults<FunctionDescriptor> resolveCallForConstructor(
+    private OverloadResolutionResults<ConstructorDescriptor> resolveCallForConstructor(
             @NotNull BasicCallResolutionContext context,
             @NotNull KtConstructorCalleeExpression expression
     ) {
@@ -351,22 +351,22 @@ public class CallResolver {
     }
 
     @NotNull
-    public OverloadResolutionResults<FunctionDescriptor> resolveConstructorCall(
+    public OverloadResolutionResults<ConstructorDescriptor> resolveConstructorCall(
             @NotNull BasicCallResolutionContext context,
             @NotNull KtReferenceExpression functionReference,
             @NotNull KotlinType constructedType
     ) {
-        Pair<Collection<ResolutionCandidate<FunctionDescriptor>>, BasicCallResolutionContext> candidatesAndContext =
+        Pair<Collection<ResolutionCandidate<ConstructorDescriptor>>, BasicCallResolutionContext> candidatesAndContext =
                 prepareCandidatesAndContextForConstructorCall(constructedType, context);
 
-        Collection<ResolutionCandidate<FunctionDescriptor>> candidates = candidatesAndContext.getFirst();
+        Collection<ResolutionCandidate<ConstructorDescriptor>> candidates = candidatesAndContext.getFirst();
         context = candidatesAndContext.getSecond();
 
         return computeTasksFromCandidatesAndResolvedCall(context, functionReference, candidates);
     }
 
     @Nullable
-    public OverloadResolutionResults<FunctionDescriptor> resolveConstructorDelegationCall(
+    public OverloadResolutionResults<ConstructorDescriptor> resolveConstructorDelegationCall(
             @NotNull BindingTrace trace, @NotNull LexicalScope scope, @NotNull DataFlowInfo dataFlowInfo,
             @NotNull ClassConstructorDescriptor constructorDescriptor,
             @NotNull KtConstructorDelegationCall call
@@ -396,7 +396,7 @@ public class CallResolver {
     }
 
     @NotNull
-    private OverloadResolutionResults<FunctionDescriptor> resolveConstructorDelegationCall(
+    private OverloadResolutionResults<ConstructorDescriptor> resolveConstructorDelegationCall(
             @NotNull BasicCallResolutionContext context,
             @NotNull KtConstructorDelegationCall call,
             @NotNull KtConstructorDelegationReferenceExpression calleeExpression,
@@ -436,9 +436,9 @@ public class CallResolver {
                                   calleeConstructor.getContainingDeclaration().getDefaultType() :
                                   DescriptorUtils.getSuperClassType(currentClassDescriptor);
 
-        Pair<Collection<ResolutionCandidate<FunctionDescriptor>>, BasicCallResolutionContext> candidatesAndContext =
+        Pair<Collection<ResolutionCandidate<ConstructorDescriptor>>, BasicCallResolutionContext> candidatesAndContext =
                 prepareCandidatesAndContextForConstructorCall(superType, context);
-        Collection<ResolutionCandidate<FunctionDescriptor>> candidates = candidatesAndContext.getFirst();
+        Collection<ResolutionCandidate<ConstructorDescriptor>> candidates = candidatesAndContext.getFirst();
         context = candidatesAndContext.getSecond();
 
         TracingStrategy tracing = call.isImplicit() ?
@@ -457,12 +457,12 @@ public class CallResolver {
     }
 
     @NotNull
-    private static Pair<Collection<ResolutionCandidate<FunctionDescriptor>>, BasicCallResolutionContext> prepareCandidatesAndContextForConstructorCall(
+    private static Pair<Collection<ResolutionCandidate<ConstructorDescriptor>>, BasicCallResolutionContext> prepareCandidatesAndContextForConstructorCall(
             @NotNull KotlinType superType,
             @NotNull BasicCallResolutionContext context
     ) {
         if (!(superType.getConstructor().getDeclarationDescriptor() instanceof ClassDescriptor)) {
-            return new Pair<>(Collections.<ResolutionCandidate<FunctionDescriptor>>emptyList(), context);
+            return new Pair<>(Collections.<ResolutionCandidate<ConstructorDescriptor>>emptyList(), context);
         }
 
         // If any constructor has type parameter (currently it only can be true for ones from Java), try to infer arguments for them
@@ -474,7 +474,7 @@ public class CallResolver {
             context = context.replaceExpectedType(superType);
         }
 
-        List<ResolutionCandidate<FunctionDescriptor>> candidates =
+        List<ResolutionCandidate<ConstructorDescriptor>> candidates =
                 CallResolverUtilKt.createResolutionCandidatesForConstructors(
                         context.scope, context.call, superType, !anyConstructorHasDeclaredTypeParameters
                 );

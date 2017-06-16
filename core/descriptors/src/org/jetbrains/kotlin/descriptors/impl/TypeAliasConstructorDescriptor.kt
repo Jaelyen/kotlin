@@ -110,7 +110,7 @@ class TypeAliasConstructorDescriptorImpl private constructor(
                 TypeAliasConstructorDescriptorImpl.createIfAvailable(storageManager, typeAliasDescriptor, constructor)
             }
 
-    override fun createSamAdapterConstructor(): FunctionDescriptor? {
+    override fun createSamAdapterConstructor(): ConstructorDescriptor? {
         val underlyingSamAdapter = underlyingConstructorDescriptor.createSamAdapterConstructor()
         if (underlyingSamAdapter !is ClassConstructorDescriptor) return null
         return typeAliasSamConstructor(underlyingSamAdapter)

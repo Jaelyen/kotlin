@@ -55,7 +55,7 @@ class AccessorForConstructorDescriptor(
 
     override fun getOriginal(): AccessorForConstructorDescriptor = this
 
-    override fun createSamAdapterConstructor(): FunctionDescriptor? = null
+    override fun createSamAdapterConstructor(): ConstructorDescriptor? = null
 
     init {
         initialize(

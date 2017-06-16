@@ -118,7 +118,7 @@ public class ClassConstructorDescriptorImpl extends FunctionDescriptorImpl imple
 
     @Nullable
     @Override
-    public FunctionDescriptor createSamAdapterConstructor() {
+    public ConstructorDescriptor createSamAdapterConstructor() {
         return null;
     }
 
