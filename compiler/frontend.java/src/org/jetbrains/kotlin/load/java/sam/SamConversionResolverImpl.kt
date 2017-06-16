@@ -16,24 +16,12 @@
 
 package org.jetbrains.kotlin.load.java.sam
 
-import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
 import org.jetbrains.kotlin.load.java.components.SamConversionResolver
-import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassDescriptor
 import org.jetbrains.kotlin.storage.StorageManager
 import org.jetbrains.kotlin.types.SimpleType
 
 class SamConversionResolverImpl(val storageManager: StorageManager, val samWithReceiverResolver: SamWithReceiverResolver): SamConversionResolver {
-    private val samConstructorForConstructor =
-            storageManager.createMemoizedFunction<JavaClassConstructorDescriptor, ConstructorDescriptor> { constructor ->
-                SingleAbstractMethodUtils.createSamAdapterConstructor(constructor) as ConstructorDescriptor
-            }
-
-    override fun createSamAdapterConstructor(constructor: JavaClassConstructorDescriptor): ConstructorDescriptor? {
-        if (!SingleAbstractMethodUtils.isSamAdapterNecessary(constructor)) return null
-        return samConstructorForConstructor(constructor)
-    }
-
     private val functionTypesForSamInterfaces = storageManager.createCacheWithNullableValues<JavaClassDescriptor, SimpleType>()
 
     override fun resolveFunctionTypeIfSamInterface(classDescriptor: JavaClassDescriptor): SimpleType? {

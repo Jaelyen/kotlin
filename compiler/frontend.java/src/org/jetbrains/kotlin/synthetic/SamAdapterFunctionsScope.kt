@@ -184,9 +184,7 @@ class SamAdapterFunctionsScope(
 
         return arrayListOf<FunctionDescriptor>().apply {
             for (constructor in classifier.constructors) {
-                if (constructor !is JavaClassConstructorDescriptor) continue
-                val samConstructor = constructor.createSamAdapterConstructor() ?: continue
-
+                val samConstructor = getSyntheticConstructor(constructor) ?: continue
                 add(samConstructor)
             }
         }

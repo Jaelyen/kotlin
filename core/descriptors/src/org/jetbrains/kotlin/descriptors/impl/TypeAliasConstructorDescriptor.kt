@@ -105,17 +105,6 @@ class TypeAliasConstructorDescriptorImpl private constructor(
     override fun getOriginal(): TypeAliasConstructorDescriptor =
             super.getOriginal() as TypeAliasConstructorDescriptor
 
-    private val typeAliasSamConstructor =
-            storageManager.createMemoizedFunctionWithNullableValues<ClassConstructorDescriptor, TypeAliasConstructorDescriptor> { constructor ->
-                TypeAliasConstructorDescriptorImpl.createIfAvailable(storageManager, typeAliasDescriptor, constructor)
-            }
-
-    override fun createSamAdapterConstructor(): ConstructorDescriptor? {
-        val underlyingSamAdapter = underlyingConstructorDescriptor.createSamAdapterConstructor()
-        if (underlyingSamAdapter !is ClassConstructorDescriptor) return null
-        return typeAliasSamConstructor(underlyingSamAdapter)
-    }
-
     override fun substitute(substitutor: TypeSubstitutor): TypeAliasConstructorDescriptor? {
         //    class C<T>(val x: T)
         //    typealias A<Q> = C<List<Q>>

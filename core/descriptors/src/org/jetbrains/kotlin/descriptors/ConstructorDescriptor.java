@@ -45,9 +45,6 @@ public interface ConstructorDescriptor extends FunctionDescriptor {
     ConstructorDescriptor getOriginal();
 
     @Nullable
-    ConstructorDescriptor createSamAdapterConstructor();
-
-    @Nullable
     @Override
     ConstructorDescriptor substitute(@NotNull TypeSubstitutor substitutor);
 

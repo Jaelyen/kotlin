@@ -118,12 +118,6 @@ public class ClassConstructorDescriptorImpl extends FunctionDescriptorImpl imple
 
     @Nullable
     @Override
-    public ConstructorDescriptor createSamAdapterConstructor() {
-        return null;
-    }
-
-    @Nullable
-    @Override
     public ClassConstructorDescriptor substitute(@NotNull TypeSubstitutor originalSubstitutor) {
         return (ClassConstructorDescriptor) super.substitute(originalSubstitutor);
     }

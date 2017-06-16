@@ -16,18 +16,13 @@
 
 package org.jetbrains.kotlin.load.java.components
 
-import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
-import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassDescriptor
 import org.jetbrains.kotlin.types.SimpleType
 
 interface SamConversionResolver {
     companion object EMPTY : SamConversionResolver {
-        override fun createSamAdapterConstructor(constructor: JavaClassConstructorDescriptor) = null
         override fun resolveFunctionTypeIfSamInterface(classDescriptor: JavaClassDescriptor): SimpleType? = null
     }
-
-    fun createSamAdapterConstructor(constructor: JavaClassConstructorDescriptor): ConstructorDescriptor?
 
     fun resolveFunctionTypeIfSamInterface(classDescriptor: JavaClassDescriptor): SimpleType?
 }

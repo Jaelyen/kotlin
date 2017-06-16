@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.load.java.JavaVisibilities
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames
 import org.jetbrains.kotlin.load.java.components.JavaResolverCache
 import org.jetbrains.kotlin.load.java.components.TypeUsage
-import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassDescriptor
 import org.jetbrains.kotlin.load.java.lazy.LazyJavaResolverContext
 import org.jetbrains.kotlin.load.java.lazy.child
@@ -161,10 +160,6 @@ class LazyJavaClassDescriptor(
     override fun getSealedSubclasses(): Collection<ClassDescriptor> = emptyList()
 
     override fun toString() = "Lazy Java class ${this.fqNameUnsafe}"
-
-    fun createSamAdapterConstructor(constructor: JavaClassConstructorDescriptor): ConstructorDescriptor? {
-        return c.components.samConversionResolver.createSamAdapterConstructor(constructor)
-    }
 
     private inner class LazyJavaClassTypeConstructor : AbstractClassTypeConstructor(c.storageManager) {
         private val parameters = c.storageManager.createLazyValue {

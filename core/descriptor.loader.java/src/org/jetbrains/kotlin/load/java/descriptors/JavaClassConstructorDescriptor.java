@@ -18,10 +18,12 @@ package org.jetbrains.kotlin.load.java.descriptors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.descriptors.*;
+import org.jetbrains.kotlin.descriptors.ClassDescriptor;
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
+import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
+import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.descriptors.annotations.Annotations;
 import org.jetbrains.kotlin.descriptors.impl.ClassConstructorDescriptorImpl;
-import org.jetbrains.kotlin.load.java.lazy.descriptors.LazyJavaClassDescriptor;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.types.KotlinType;
 
@@ -135,16 +137,5 @@ public class JavaClassConstructorDescriptor extends ClassConstructorDescriptorIm
         );
 
         return enhanced;
-    }
-
-    @Override
-    @Nullable
-    public ConstructorDescriptor createSamAdapterConstructor() {
-        ClassDescriptor declaration = getContainingDeclaration();
-        if (declaration instanceof LazyJavaClassDescriptor) {
-            return ((LazyJavaClassDescriptor) declaration).createSamAdapterConstructor(this);
-        }
-
-        return null;
     }
 }

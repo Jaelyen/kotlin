@@ -55,8 +55,6 @@ class AccessorForConstructorDescriptor(
 
     override fun getOriginal(): AccessorForConstructorDescriptor = this
 
-    override fun createSamAdapterConstructor(): ConstructorDescriptor? = null
-
     init {
         initialize(
                 DescriptorUtils.getReceiverParameterType(extensionReceiverParameter),
